@@ -14,7 +14,7 @@ import glob
 
 def ultimo_arquivo():
 
-    diretorio = r"C:\Users\Compras\Downloads"
+    diretorio = r"C:\Users\TI\Downloads"
     arquivos_csv = [arquivo for arquivo in os.listdir(diretorio) if arquivo.endswith('.csv')]
 
     # ordenar os arquivos pela data de modificação, do mais recente para o mais antigo
@@ -106,9 +106,9 @@ nav.get('http://192.168.3.141/sistema') # Sistema de produção
 
 
 # Usuário e Senha Cemag
-nav.find_element(By.ID, 'username').send_keys('ti.dev') #ti.dev Ti.cemag
+nav.find_element(By.ID, 'username').send_keys('Ti.cemag') #ti.dev Ti.cemag
 time.sleep(2)
-nav.find_element(By.ID, 'password').send_keys('cem@#161010') #Cem@#161010
+nav.find_element(By.ID, 'password').send_keys('Cem@#161010') #Cem@#161010
 time.sleep(1)
 nav.find_element(By.ID, 'submit-login').click()
 
@@ -482,7 +482,7 @@ time.sleep(1)
 
 ultimoArquivo, caminho = ultimo_arquivo()
 
-tabela_recursos = pd.read_csv(r'C:/Users/Compras/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+tabela_recursos = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
 
 tabela_recursos = tabela_recursos.rename(columns={'="Recurso"':'Recurso','="Unid."':'Unid.','="Média"':'Média',
                                                   '="CMA"':'CMA', '="Simulado"':'Simulado','="Qtd.Est."':'Qtd.Est.','="Ped.Pend."':'Ped.Pend.',
@@ -651,7 +651,7 @@ time.sleep(1)
 
 ultimoArquivo, caminho = ultimo_arquivo()
 
-tabela_saldos = pd.read_csv(r'C:/Users/Compras/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+tabela_saldos = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
 
 tabela_saldos = tabela_saldos.rename(columns={'="1o. Agrupamento"':'1o. Agrupamento','=" "':'','="Depósito"':'Depósito',
                                                   '="Recurso#Classe"':'Recurso#Classe', '="Recurso#Unid. Medida"':'Recurso#Unid. Medida','="Saldo"':'Saldo','="Custo#Total"':'Custo#Total',
@@ -759,7 +759,7 @@ time.sleep(1.5)
 
 ultimoArquivo, caminho = ultimo_arquivo()
 
-tabela_analise = pd.read_csv(r'C:/Users/Compras/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+tabela_analise = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
 
 tabela_analise = tabela_analise.rename(columns={'="1o. Agrupamento"':'Região','="2o. Agrupamento"':'Estado','="3o. Agrupamento"':'Pessoa',
                                                   '="4o. Agrupamento"':'Classe Recurso', '="5o. Agrupamento"':'Data Entrega','="Chave ¹   Ch Criação ²"':'Chave ¹ Ch Criação ²','="Emissão"':'Emissão',
