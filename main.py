@@ -36,9 +36,13 @@ sa = gspread.service_account(filename)
 # Conectando com google sheets e acessando Análise Previsão de Consumo (CMM / NTP ) DEE
 
 sheet = 'Análise Previsão de Consumo (CMM / NTP ) DEE'
+sheet2 = 'Análise Previsão de Consumo (Materiais Custo Indireto "Requisitados")'
 worksheet = 'Dados Simulação'
 worksheet2 = 'Est. Produção'
 worksheet3 = 'Dados Pedidos'
+
+sh = client.open_by_key('1s6w-B4kqHiSOk6l9m8jA67-43b6l_ejWN-E2SWavoOs')
+wks = sh.worksheet(worksheet)
 
 sh1 = sa.open(sheet)
 wks1 = sh1.worksheet(worksheet)
@@ -48,14 +52,17 @@ wks3 = sh1.worksheet(worksheet3)
 df = wks1.get()
 df2 = wks2.get()
 df3 = wks3.get()
+df4 = wks.get()
 
 tabela = pd.DataFrame(df)
 tabela2 = pd.DataFrame(df2)
 tabela3 = pd.DataFrame(df3)
+tabela4 = pd.DataFrame(df4)
 
 cabecalho = wks1.row_values(2)
 cabecalho2 = wks2.row_values(2)
 cabecalho3 = wks3.row_values(2)
+cabecalho4 = wks.row_values(2)
 
 #tratando planilha Análise Previsão de Consumo (CMM / NTP ) DEE
 #df = df.set_axis(cabecalho, axis=1)
@@ -108,7 +115,7 @@ nav.get('http://192.168.3.141/sistema') # Sistema de produção
 # Usuário e Senha Cemag
 nav.find_element(By.ID, 'username').send_keys('Ti.cemag') #ti.dev Ti.cemag
 time.sleep(2)
-nav.find_element(By.ID, 'password').send_keys('Cem@#161010') #Cem@#161010
+nav.find_element(By.ID, 'password').send_keys('cem@#1501') #Cem@#161010
 time.sleep(1)
 nav.find_element(By.ID, 'submit-login').click()
 
@@ -443,11 +450,9 @@ time.sleep(2)
 mat_prod.send_keys(Keys.BACKSPACE)
 time.sleep(2)
 mat_prod.send_keys('Materiais e Produtos')
-time.sleep(2)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(2)
-nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input').send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
-time.sleep(2)
+time.sleep(3)
+mat_prod.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
+time.sleep(3)
 
 while len(nav.find_elements(By.XPATH, '//*[@id="lid-0"]')) < 1:
     time.sleep(1)
@@ -784,6 +789,15 @@ tabela_analise_csv['Qde Pend'] = tabela_analise_csv['Qde Pend'].replace(",",".",
 tabela_analise_csv['Qde Pend'] = tabela_analise_csv['Qde Pend'].replace("",0,regex=True)
 tabela_analise_csv['Qde Pend'] = tabela_analise_csv['Qde Pend'].astype(float)
 
+tabela_analise_csv['Unitário'] = tabela_analise_csv['Unitário'].replace(",",".",regex=True)
+tabela_analise_csv['Unitário'] = tabela_analise_csv['Unitário'].replace("",0,regex=True)
+tabela_analise_csv['Unitário'] = tabela_analise_csv['Unitário'].astype(float)
+
+tabela_analise_csv['Total'] = tabela_analise_csv['Total'].replace(",",".",regex=True)
+tabela_analise_csv['Total'] = tabela_analise_csv['Total'].replace("",0,regex=True)
+tabela_analise_csv['Total'] = tabela_analise_csv['Total'].astype(float)
+
+
 #Limpar valores nulos e transformar em lista
 tabela_analise_csv_lista = tabela_analise_csv.fillna('').values.tolist()
 
@@ -794,49 +808,159 @@ wks3.update('B2:Y', tabela_analise_csv_lista)
 
 time.sleep(2)
 
-# data = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')
-# time.sleep(1)
-# data.send_keys('h')
-# time.sleep(1)
-# data.send_keys(Keys.ENTER)
-# time.sleep(1)
-# saida_iframe(nav)
-# nav.find_element(By.XPATH, '//*[@id="buttonsContainer_1"]/td[1]/span[2]').click()
-# time.sleep(1.5)
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------
+# Innovaro -> Produção -> Plano Mestre -> Plano Mestre
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.ID, 'bt_1892603865')))
+time.sleep(1.5)
+nav.find_element(By.ID, 'bt_1892603865').click()
+time.sleep(3)
+lista_menu, test_list = listar(nav, 'webguiTreeNodeLabel')
+time.sleep(1)
+click_producao = test_list.loc[test_list[0] == 'Plano mestre e simulação'].reset_index(drop=True)['index'][0]
+lista_menu[click_producao].click()
+time.sleep(6)
 
-# try:
-#     while nav.find_element(By.ID, 'statusMessageBox'):
-#         print('Carregando...')
-# except:
-#     print('Carregou 1')
+iframes(nav)
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[1]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div')))
+time.sleep(1.5)
+nav.find_element(By.XPATH, '/html/body/table/tbody/tr[1]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div').click()
+time.sleep(3)
+input_localizar = nav.find_element(By.ID, 'grInputSearch_grSimulacoes')
+time.sleep(2)
+input_localizar.send_keys('Simulação Mat ind (Mov 3M)')
+time.sleep(2)
+input_localizar.send_keys(Keys.ENTER)
+time.sleep(2)
 
-# try: 
-#     while  nav.find_element(By.ID, 'progressMessageBox'):
-#         print('Carregando 2 ...')
-# except:
-#     print('Carregou 2') 
+try: 
+  while  nav.find_element(By.ID, 'progressMessageBox'):
+    print('Carregando 3 ...')
+except:
+    print('Carregou 3') 
+    time.sleep(1.5)
 
-# time.sleep(1)
-# nav.find_element(By.XPATH, '//*[@id="buttonsContainer_1"]/td[2]/span[2]').click()
-# time.sleep(1)
+# Explodir
+time.sleep(2)
+saida_iframe(nav)
+nav.find_element(By.ID, 'Pesquisar').send_keys(Keys.CONTROL,Keys.SHIFT + 'x')
+time.sleep(2)
+# Clicar em OK apos a tela de carregamento
+while len(nav.find_elements(By.XPATH, '/html/body/div[10]/div[2]/table/tbody/tr[2]/td/div/button')) < 1:
+    time.sleep(1)
+time.sleep(1.5)
 
-# nav.find_element(By.ID, 'answers_0').click()
-# time.sleep(1) 
+nav.find_element(By.XPATH,'//*[@id="confirm"]').click()
+time.sleep(1.5)
 
-# saida_iframe(nav)
+saida_iframe(nav)
+time.sleep(3)
+nav.find_element(By.ID, 'bt_1892603865').click()
+time.sleep(2)
 
-# nav.find_element(By.XPATH, '/html/body/div[4]/div[2]/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[1]/span[2]').click()
-# time.sleep(1.5)
+lista_menu, test_list = listar(nav, 'webguiTreeNodeLabel')
+time.sleep(1)
+click_producao = test_list.loc[test_list[0] == 'Relatório de Logística de Compras da Simulação'].reset_index(drop=True)['index'][0]
 
-# saida_iframe(nav)
+lista_menu[click_producao].click()
+time.sleep(6)
+iframes(nav)
+time.sleep(2)
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')))
+time.sleep(2)
+simulacao = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')
+time.sleep(2)
+simulacao.send_keys(Keys.BACKSPACE)
+time.sleep(2)
+simulacao.send_keys('Simulação Mat ind (Mov 3M)') # Último Nível, Almox de Compras, Materiais e Produtos
+time.sleep(3)
+simulacao.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
+time.sleep(3)
 
-# try:
-#     while  nav.find_element(By.ID, 'content_progressMessageBox'):
-            
-#             print('Carregando 3 ...')
-# except:
-#     print('Carregou 3') 
+while len(nav.find_elements(By.XPATH, '//*[@id="lid-0"]')) < 1:
+    time.sleep(1)
 
-# iframes(nav)
+time.sleep(3)
+saida_iframe(nav)
+time.sleep(2)
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/table/tbody/tr/td[9]/div/input')))
+time.sleep(1.5)
+nav.find_element(By.XPATH, '/html/body/div[2]/table/tbody/tr/td[9]/div/input').send_keys(Keys.CONTROL, Keys.SHIFT + 'x')
+time.sleep(2)
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.ID, 'answers_3')))
+time.sleep(1.5)
+nav.find_element(By.ID, 'answers_3').click()
+time.sleep(4)
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.ID,'answers_0')))
+time.sleep(1.5)
+nav.find_element(By.ID,'answers_0').click()
+time.sleep(4)
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/table/tbody/tr/td[9]/div/input')))
+time.sleep(1.5)
+nav.find_element(By.XPATH, '/html/body/div[2]/table/tbody/tr/td[9]/div/input').send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
+time.sleep(5)
+iframes(nav)
+time.sleep(1)
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="_download_elt"]')))
+time.sleep(1.5)
+nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
+time.sleep(3)
+# ---------------------------------------------------------------------------
+# Organizando a planilha de Dados Simulação - Planilha "Requisitados"
 
-# nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
+ultimoArquivo, caminho = ultimo_arquivo()
+
+tabela_recursos = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+
+tabela_recursos = tabela_recursos.rename(columns={'="Recurso"':'Recurso','="Unid."':'Unid.','="Média"':'Média',
+                                                  '="CMA"':'CMA', '="Simulado"':'Simulado','="Qtd.Est."':'Qtd.Est.','="Ped.Pend."':'Ped.Pend.',
+                                                  '="Saldo"':'Saldo','="Cust.Unit."':'Cust.Unit.', '="TRP"':'TRP','="DEE"':'DEE'})
+
+tabela_recursos_csv = tabela_recursos.copy()
+
+tabela_recursos_csv = tabela_recursos_csv.replace('=','',regex=True)
+tabela_recursos_csv.replace('"','',regex=True,inplace=True)
+
+tabela_recursos_csv['Média'] = tabela_recursos_csv['Média'].replace(",",".",regex=True)
+tabela_recursos_csv['Média'] = tabela_recursos_csv['Média'].replace("",0,regex=True)
+tabela_recursos_csv['Média'] = tabela_recursos_csv['Média'].astype(float)
+
+tabela_recursos_csv['CMA'] = tabela_recursos_csv['CMA'].replace(",",".",regex=True)
+tabela_recursos_csv['CMA'] = tabela_recursos_csv['CMA'].replace("",0,regex=True)
+tabela_recursos_csv['CMA'] = tabela_recursos_csv['CMA'].astype(float)
+
+tabela_recursos_csv['Simulado'] = tabela_recursos_csv['Simulado'].replace(",",".",regex=True)
+tabela_recursos_csv['Simulado'] = tabela_recursos_csv['Simulado'].replace("",0,regex=True)
+tabela_recursos_csv['Simulado'] = tabela_recursos_csv['Simulado'].astype(float)
+
+tabela_recursos_csv['Qtd.Est.'] = tabela_recursos_csv['Qtd.Est.'].replace(",",".",regex=True)
+tabela_recursos_csv['Qtd.Est.'] = tabela_recursos_csv['Qtd.Est.'].replace("",0,regex=True)
+tabela_recursos_csv['Qtd.Est.'] = tabela_recursos_csv['Qtd.Est.'].astype(float)
+
+tabela_recursos_csv['Ped.Pend.'] = tabela_recursos_csv['Ped.Pend.'].replace(",",".",regex=True)
+tabela_recursos_csv['Ped.Pend.'] = tabela_recursos_csv['Ped.Pend.'].replace("",0,regex=True)
+tabela_recursos_csv['Ped.Pend.'] = tabela_recursos_csv['Ped.Pend.'].astype(float)
+
+tabela_recursos_csv['Saldo'] = tabela_recursos_csv['Saldo'].replace(",",".",regex=True)
+tabela_recursos_csv['Saldo'] = tabela_recursos_csv['Saldo'].replace("",0,regex=True)
+tabela_recursos_csv['Saldo'] = tabela_recursos_csv['Saldo'].astype(float)
+
+tabela_recursos_csv['Cust.Unit.'] = tabela_recursos_csv['Cust.Unit.'].replace(",",".",regex=True)
+tabela_recursos_csv['Cust.Unit.'] = tabela_recursos_csv['Cust.Unit.'].replace("",0,regex=True)
+tabela_recursos_csv['Cust.Unit.'] = tabela_recursos_csv['Cust.Unit.'].astype(float)
+
+tabela_recursos_csv['DEE'] = tabela_recursos_csv['DEE'].replace(",",".",regex=True)
+tabela_recursos_csv['DEE'] = tabela_recursos_csv['DEE'].replace("",0,regex=True)
+tabela_recursos_csv['DEE'] = tabela_recursos_csv['DEE'].astype(float)
+
+#Limpar valores nulos e transformar em lista
+tabela_recursos_csv_lista = tabela_recursos_csv.fillna('').values.tolist()
+
+#Apagar valores da planilha
+sh.values_clear("'Dados Simulação'!E2:O")
+
+#Atualizar valores da planilha
+wks.update('E2:O', tabela_recursos_csv_lista)
+
+time.sleep(2)
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------
