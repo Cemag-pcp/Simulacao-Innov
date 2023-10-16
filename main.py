@@ -393,11 +393,11 @@ saida_iframe(nav)
 nav.find_element(By.ID, 'Pesquisar').send_keys(Keys.CONTROL,Keys.SHIFT + 'x')
 time.sleep(2)
 # Clicar em OK apos a tela de carregamento
-while len(nav.find_elements(By.XPATH, '/html/body/div[10]/div[2]/table/tbody/tr[2]/td/div/button')) < 1:
+while len(nav.find_elements(By.XPATH, '/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button')) < 1:
     time.sleep(1)
 time.sleep(1.5)
 
-nav.find_element(By.XPATH,'//*[@id="confirm"]').click()
+nav.find_element(By.XPATH,'/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button').click()
 time.sleep(1.5)
 
 saida_iframe(nav)
@@ -479,9 +479,9 @@ time.sleep(5)
 iframes(nav)
 time.sleep(1)
 WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="_download_elt"]')))
-time.sleep(1.5)
+time.sleep(3)
 nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
-time.sleep(1)
+time.sleep(3)
 
 # Organizando a planilha Recursos utilizados
 
@@ -757,7 +757,7 @@ time.sleep(3)
 
 nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
 
-time.sleep(1.5)
+time.sleep(5)
 
 # ---------------------------------------------------------------------------
 # Organizando a planilha de Análise de Pedidos Pendentes ou Baixados - CEMAG 
@@ -810,6 +810,7 @@ time.sleep(2)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
 # Innovaro -> Produção -> Plano Mestre -> Plano Mestre
+
 saida_iframe(nav)
 time.sleep(3)
 WebDriverWait(nav,20).until(EC.presence_of_element_located((By.ID, 'bt_1892603865')))
@@ -830,7 +831,7 @@ time.sleep(3)
 input_localizar = nav.find_element(By.ID, 'grInputSearch_grSimulacoes')
 time.sleep(2)
 input_localizar.send_keys('Simulação Mat ind (Mov 3M)')
-time.sleep(2)
+time.sleep(3)
 input_localizar.send_keys(Keys.ENTER)
 time.sleep(2)
 
@@ -847,13 +848,14 @@ saida_iframe(nav)
 nav.find_element(By.ID, 'Pesquisar').send_keys(Keys.CONTROL,Keys.SHIFT + 'x')
 time.sleep(2)
 # Clicar em OK apos a tela de carregamento
-while len(nav.find_elements(By.XPATH, '/html/body/div[10]/div[2]/table/tbody/tr[2]/td/div/button')) < 1:
+while len(nav.find_elements(By.XPATH, '/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button')) < 1:
     time.sleep(1)
 time.sleep(1.5)
 
 nav.find_element(By.XPATH,'//*[@id="confirm"]').click()
 time.sleep(1.5)
 
+saida_iframe(nav)
 time.sleep(3)
 nav.find_element(By.ID, 'bt_1892603865').click()
 time.sleep(2)
@@ -874,10 +876,16 @@ simulacao.send_keys(Keys.BACKSPACE)
 time.sleep(3)
 simulacao.send_keys('Simulação Mat ind (Mov 3M)') # Último Nível, Almox de Compras, Materiais e Produtos
 time.sleep(3)
-simulacao.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
+simulacao.send_keys(Keys.TAB)
 time.sleep(3)
+WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
+time.sleep(2)
+ult_niv = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')
+time.sleep(2)
+ult_niv.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
+time.sleep(1)
 
-while len(nav.find_elements(By.XPATH, '//*[@id="lid-0"]')) < 1:
+while len(nav.find_elements(By.XPATH, '/html/body/table[2]/thead/tr[1]/th/table/tbody/tr[1]/td[1]/table/tbody/tr/td')) < 1: #len(nav.find_elements(By.XPATH, '//*[@id="lid-0"]')) < 1 or len(nav.find_elements(By.XPATH, '//*[@id="lid-14"]')) < 1
     time.sleep(1)
 
 time.sleep(3)
