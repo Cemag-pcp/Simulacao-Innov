@@ -353,6 +353,68 @@ def update_analise_pedidos_pendentes():
 
     time.sleep(2)
 
+# Baixando a planilha analise de pedidos pendentes e colocando em Dados Simulação no Google Sheets Requisitados
+def update_analise_pedidos_materiais_custo_indireto():
+    
+    # Organizando a planilha de Dados Simulação - Planilha "Requisitados"
+
+    ultimoArquivo, caminho = ultimo_arquivo()
+
+    tabela_recursos = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+
+    tabela_recursos = tabela_recursos.rename(columns={'="Recurso"':'Recurso','="Unid."':'Unid.','="Média"':'Média',
+                                                    '="CMA"':'CMA', '="Simulado"':'Simulado','="Qtd.Est."':'Qtd.Est.','="Ped.Pend."':'Ped.Pend.',
+                                                    '="Saldo"':'Saldo','="Cust.Unit."':'Cust.Unit.', '="TRP"':'TRP','="DEE"':'DEE'})
+
+    tabela_recursos_csv = tabela_recursos.copy()
+
+    tabela_recursos_csv = tabela_recursos_csv.replace('=','',regex=True)
+    tabela_recursos_csv.replace('"','',regex=True,inplace=True)
+
+    tabela_recursos_csv['Média'] = tabela_recursos_csv['Média'].replace(",",".",regex=True)
+    tabela_recursos_csv['Média'] = tabela_recursos_csv['Média'].replace("",0,regex=True)
+    tabela_recursos_csv['Média'] = tabela_recursos_csv['Média'].astype(float)
+
+    tabela_recursos_csv['CMA'] = tabela_recursos_csv['CMA'].replace(",",".",regex=True)
+    tabela_recursos_csv['CMA'] = tabela_recursos_csv['CMA'].replace("",0,regex=True)
+    tabela_recursos_csv['CMA'] = tabela_recursos_csv['CMA'].astype(float)
+
+    tabela_recursos_csv['Simulado'] = tabela_recursos_csv['Simulado'].replace(",",".",regex=True)
+    tabela_recursos_csv['Simulado'] = tabela_recursos_csv['Simulado'].replace("",0,regex=True)
+    tabela_recursos_csv['Simulado'] = tabela_recursos_csv['Simulado'].astype(float)
+
+    tabela_recursos_csv['Qtd.Est.'] = tabela_recursos_csv['Qtd.Est.'].replace(",",".",regex=True)
+    tabela_recursos_csv['Qtd.Est.'] = tabela_recursos_csv['Qtd.Est.'].replace("",0,regex=True)
+    tabela_recursos_csv['Qtd.Est.'] = tabela_recursos_csv['Qtd.Est.'].astype(float)
+
+    tabela_recursos_csv['Ped.Pend.'] = tabela_recursos_csv['Ped.Pend.'].replace(",",".",regex=True)
+    tabela_recursos_csv['Ped.Pend.'] = tabela_recursos_csv['Ped.Pend.'].replace("",0,regex=True)
+    tabela_recursos_csv['Ped.Pend.'] = tabela_recursos_csv['Ped.Pend.'].astype(float)
+
+    tabela_recursos_csv['Saldo'] = tabela_recursos_csv['Saldo'].replace(",",".",regex=True)
+    tabela_recursos_csv['Saldo'] = tabela_recursos_csv['Saldo'].replace("",0,regex=True)
+    tabela_recursos_csv['Saldo'] = tabela_recursos_csv['Saldo'].astype(float)
+
+    tabela_recursos_csv['Cust.Unit.'] = tabela_recursos_csv['Cust.Unit.'].replace(",",".",regex=True)
+    tabela_recursos_csv['Cust.Unit.'] = tabela_recursos_csv['Cust.Unit.'].replace("",0,regex=True)
+    tabela_recursos_csv['Cust.Unit.'] = tabela_recursos_csv['Cust.Unit.'].astype(float)
+
+    tabela_recursos_csv['DEE'] = tabela_recursos_csv['DEE'].replace(",",".",regex=True)
+    tabela_recursos_csv['DEE'] = tabela_recursos_csv['DEE'].replace("",0,regex=True)
+    tabela_recursos_csv['DEE'] = tabela_recursos_csv['DEE'].astype(float)
+
+    #Limpar valores nulos e transformar em lista
+    tabela_recursos_csv_lista = tabela_recursos_csv.fillna('').values.tolist()
+
+    #Apagar valores da planilha
+    sh.values_clear("'Dados Simulação'!E2:O")
+
+    #Atualizar valores da planilha
+    wks.update('E2:O', tabela_recursos_csv_lista)
+
+    time.sleep(2)
+
+
 # API GOOGLE PLANILHAS
 scope = ['https://www.googleapis.com/auth/spreadsheets',
             "https://www.googleapis.com/auth/drive"]
@@ -881,7 +943,7 @@ time.sleep(3)
 # ---------------------------------------------------------------------------
 # Organizando a planilha de Dados Simulação - Planilha "Requisitados"
 
-update_planilha_recursos_utilizados()
+update_analise_pedidos_materiais_custo_indireto()
 
 time.sleep(2)
 
