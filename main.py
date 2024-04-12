@@ -77,8 +77,9 @@ def acessar_innovaro_login():
     time.sleep(1)
     nav.maximize_window()
     time.sleep(1)
-    nav.get('http://192.168.3.141/sistema') # Sistema de produção
+    # nav.get('http://192.168.3.141/sistema') # Sistema de produção
     # nav.get('http://devcemag.innovaro.com.br:81/sistema') # Base H - Testes
+    nav.get('https://cemag.innovaro.com.br/sistema')
 
 
     # Usuário e Senha Cemag
@@ -172,21 +173,32 @@ def download_recursos_utilizados(nav):
     time.sleep(1.5)
     nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
 
-# FUNÇÃO NÃO UTILIZADA
 def materiais_pecas(nav):
     time.sleep(2)
     saida_iframe(nav)
     time.sleep(2)
 
     menu_innovaro(nav)
+
     time.sleep(2)
 
     listar_menu_click(nav,'Plano mestre e simulação')
-    
+
     time.sleep(2)
     # Pendencia de Pedidos
-    input_localizar(nav,'Pendencia Diaria Carretas Compras')
-
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[1]/span[2]')))
+    time.sleep(1.5)
+    iframes(nav)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[1]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[1]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div').click()
+    time.sleep(3)
+    input_localizar = nav.find_element(By.ID, 'grInputSearch_grSimulacoes')
+    time.sleep(2)
+    input_localizar.send_keys('Pendencia Diaria Carretas Compras')
+    time.sleep(2)
+    input_localizar.send_keys(Keys.ENTER)
+    time.sleep(2)
     input_localizar.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
     time.sleep(2)
     WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
@@ -202,22 +214,12 @@ def materiais_pecas(nav):
     classe_recursos.send_keys(Keys.ENTER)
     time.sleep(3)
     classe_recursos.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
-    time.sleep(3)
 
-    try: 
-        time.sleep(3)
-        saida_iframe(nav)
-        time.sleep(3)
-        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[10]/td[11]/div/div')))
-        time.sleep(3)
-        nav.find_element(By.XPATH, '/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button').click()
-        time.sleep(2)
-        nav.find_element(By.XPATH, '/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button').click()
-        time.sleep(2)
-        nav.find_element(By.XPATH,'/html/body/div[4]/div/div[1]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div').click()
-        time.sleep(2)
-    except:
-        pass
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[10]/td[11]/div/div')))
+
+    while len(nav.find_elements(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[10]/td[11]/div/div')) < 1:
+        time.sleep(1)
+    time.sleep(1.5)
 
 # Baixando a planilha recursos utilizando e colocando em Dados Simulação
 def update_planilha_recursos_utilizados():
@@ -555,11 +557,7 @@ except:
     print('Carregou 2') 
     time.sleep(1.5)
 
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[10]/td[11]/div/div')))
-
-# while len(nav.find_elements(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[10]/td[11]/div/div')) < 1:
-#     time.sleep(1)
-time.sleep(1.5)
+materiais_pecas(nav)
 
 nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[14]/td[11]/div/div').click()
 
