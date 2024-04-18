@@ -18,16 +18,18 @@ wait = 20
 # Download do ultimo arquivo baixado na pasta Downloads
 def ultimo_arquivo():
 
-    diretorio = r"C:\Users\TI\Downloads" #r"C:\Users\TI\Downloads"
-    arquivos_csv = [arquivo for arquivo in os.listdir(diretorio) if arquivo.endswith('.csv')]
+    # Obtém o diretório padrão de downloads do sistema operacional
+    diretorio_downloads = os.path.join(os.path.expanduser('~'), 'Downloads')
 
-    # ordenar os arquivos pela data de modificação, do mais recente para o mais antigo
-    arquivos_csv = sorted(arquivos_csv, key=lambda arquivo: os.path.getmtime(os.path.join(diretorio, arquivo)), reverse=True)
+    arquivos_csv = [arquivo for arquivo in os.listdir(diretorio_downloads) if arquivo.endswith('.csv')]
 
-    # pegar o arquivo mais recente
+    # Ordena os arquivos pela data de modificação, do mais recente para o mais antigo
+    arquivos_csv = sorted(arquivos_csv, key=lambda arquivo: os.path.getmtime(os.path.join(diretorio_downloads, arquivo)), reverse=True)
+
+    # Pega o arquivo mais recente
     ultimo_arquivo = arquivos_csv[0]
 
-    return ultimo_arquivo, diretorio
+    return ultimo_arquivo, diretorio_downloads
 
 # Entrando no Iframe
 def iframes(nav):
@@ -224,9 +226,9 @@ def materiais_pecas(nav):
 # Baixando a planilha recursos utilizando e colocando em Dados Simulação
 def update_planilha_recursos_utilizados():
 
-    ultimoArquivo, caminho = ultimo_arquivo()
+    nome_arquivo, diretorio = ultimo_arquivo()
 
-    tabela_recursos = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+    tabela_recursos = pd.read_csv(os.path.join(diretorio, nome_arquivo), encoding='iso-8859-1', sep=';')
 
     tabela_recursos = tabela_recursos.rename(columns={'="Recurso"':'Recurso','="Unid."':'Unid.','="Média"':'Média',
                                                     '="CMA"':'CMA', '="Simulado"':'Simulado','="Qtd.Est."':'Qtd.Est.','="Ped.Pend."':'Ped.Pend.',
@@ -281,9 +283,9 @@ def update_planilha_recursos_utilizados():
 # Baixando a planilha saldo de recursos e colocando em Est. Produção
 def update_saldo_recursos():
 
-    ultimoArquivo, caminho = ultimo_arquivo()
+    nome_arquivo, diretorio = ultimo_arquivo()
 
-    tabela_saldos = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+    tabela_saldos = pd.read_csv(os.path.join(diretorio, nome_arquivo), encoding='iso-8859-1', sep=';')
 
     tabela_saldos = tabela_saldos.rename(columns={'="1o. Agrupamento"':'1o. Agrupamento','=" "':'','="Depósito"':'Depósito',
                                                     '="Recurso#Classe"':'Recurso#Classe', '="Recurso#Unid. Medida"':'Recurso#Unid. Medida','="Saldo"':'Saldo','="Custo#Total"':'Custo#Total',
@@ -309,9 +311,9 @@ def update_saldo_recursos():
 # Baixando a planilha analise de pedidos pendentes e colocando em Dados Pedidos
 def update_analise_pedidos_pendentes():
     
-    ultimoArquivo, caminho = ultimo_arquivo()
+    nome_arquivo, diretorio = ultimo_arquivo()
 
-    tabela_analise = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+    tabela_analise = pd.read_csv(os.path.join(diretorio, nome_arquivo), encoding='iso-8859-1', sep=';')
 
     tabela_analise = tabela_analise.rename(columns={'="1o. Agrupamento"':'Região','="2o. Agrupamento"':'Estado','="3o. Agrupamento"':'Pessoa',
                                                     '="4o. Agrupamento"':'Classe Recurso', '="5o. Agrupamento"':'Data Entrega','="Chave ¹   Ch Criação ²"':'Chave ¹ Ch Criação ²','="Emissão"':'Emissão',
@@ -417,532 +419,540 @@ def update_analise_pedidos_materiais_custo_indireto():
     time.sleep(2)
 
 
-# API GOOGLE PLANILHAS
-scope = ['https://www.googleapis.com/auth/spreadsheets',
-            "https://www.googleapis.com/auth/drive"]
-
-credentials = ServiceAccountCredentials.from_json_keyfile_name("service_account_cemag.json", scope)
-client = gspread.authorize(credentials)
-filename = 'service_account_cemag.json'
-sa = gspread.service_account(filename)
-
-# Conectando com google sheets e acessando Análise Previsão de Consumo (CMM / NTP ) DEE
-
-sheet = 'Análise Previsão de Consumo (CMM / NTP ) DEE'
-sheet2 = 'Análise Previsão de Consumo (Materiais Custo Indireto "Requisitados")'
-worksheet = 'Dados Simulação'
-worksheet2 = 'Est. Produção'
-worksheet3 = 'Dados Pedidos'
-
-sh = client.open_by_key('1s6w-B4kqHiSOk6l9m8jA67-43b6l_ejWN-E2SWavoOs')
-wks = sh.worksheet(worksheet)
-
-sh1 = sa.open(sheet)
-wks1 = sh1.worksheet(worksheet)
-wks2 = sh1.worksheet(worksheet2)
-wks3 = sh1.worksheet(worksheet3)
-
-df = wks1.get()
-df2 = wks2.get()
-df3 = wks3.get()
-df4 = wks.get()
-
-tabela = pd.DataFrame(df)
-tabela2 = pd.DataFrame(df2)
-tabela3 = pd.DataFrame(df3)
-tabela4 = pd.DataFrame(df4)
-
-cabecalho = wks1.row_values(2)
-cabecalho2 = wks2.row_values(2)
-cabecalho3 = wks3.row_values(2)
-cabecalho4 = wks.row_values(2)
-
-nav = acessar_innovaro_login()
-
-time.sleep(1)
-
-menu_innovaro(nav)
-
-time.sleep(1)
-
-listar_menu_click(nav,'Produção')
-
-listar_menu_click(nav,'Plano mestre e simulação (MPS)')
-
-listar_menu_click(nav,'Plano mestre e simulação')
-
-time.sleep(6)
-
-# Acessando os icones e o input de localizar
-iframes(nav)
-time.sleep(1)
-input_localizar(nav,'Pendencia Diaria Carretas Compras')
-
-try: 
-  while  nav.find_element(By.ID, 'progressMessageBox'):
-    print('Carregando 2 ...')
-except:
-    print('Carregou 2') 
-    time.sleep(1.5)
-
-time.sleep(3)
-
-# Excluindo os itens
-excluindo_itens(nav)
-
-time.sleep(3)
-
-saida_iframe(nav)
-
-time.sleep(3)
-
 try:
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="answers_0"]')))
+    # API GOOGLE PLANILHAS
+    scope = ['https://www.googleapis.com/auth/spreadsheets',
+                "https://www.googleapis.com/auth/drive"]
+
+    credentials = ServiceAccountCredentials.from_json_keyfile_name("service_account_cemag.json", scope)
+    client = gspread.authorize(credentials)
+    filename = 'service_account_cemag.json'
+    sa = gspread.service_account(filename)
+
+    # Conectando com google sheets e acessando Análise Previsão de Consumo (CMM / NTP ) DEE
+
+    sheet = 'Análise Previsão de Consumo (CMM / NTP ) DEE'
+    sheet2 = 'Análise Previsão de Consumo (Materiais Custo Indireto "Requisitados")'
+    worksheet = 'Dados Simulação'
+    worksheet2 = 'Est. Produção'
+    worksheet3 = 'Dados Pedidos'
+
+    sh = client.open_by_key('1s6w-B4kqHiSOk6l9m8jA67-43b6l_ejWN-E2SWavoOs')
+    wks = sh.worksheet(worksheet)
+
+    sh1 = sa.open(sheet)
+    wks1 = sh1.worksheet(worksheet)
+    wks2 = sh1.worksheet(worksheet2)
+    wks3 = sh1.worksheet(worksheet3)
+
+    df = wks1.get()
+    df2 = wks2.get()
+    df3 = wks3.get()
+    df4 = wks.get()
+
+    tabela = pd.DataFrame(df)
+    tabela2 = pd.DataFrame(df2)
+    tabela3 = pd.DataFrame(df3)
+    tabela4 = pd.DataFrame(df4)
+
+    cabecalho = wks1.row_values(2)
+    cabecalho2 = wks2.row_values(2)
+    cabecalho3 = wks3.row_values(2)
+    cabecalho4 = wks.row_values(2)
+
+    nav = acessar_innovaro_login()
+
     time.sleep(1)
-    nav.find_element(By.XPATH, '//*[@id="answers_0"]').click()
+
+    menu_innovaro(nav)
+
+    time.sleep(1)
+
+    listar_menu_click(nav,'Produção')
+
+    listar_menu_click(nav,'Plano mestre e simulação (MPS)')
+
+    listar_menu_click(nav,'Plano mestre e simulação')
+
+    time.sleep(6)
+
+    # Acessando os icones e o input de localizar
+    iframes(nav)
+    time.sleep(1)
+    input_localizar(nav,'Pendencia Diaria Carretas Compras')
+
+    try: 
+        while  nav.find_element(By.ID, 'progressMessageBox'):
+            print('Carregando 2 ...')
+    except:
+        print('Carregou 2') 
+        time.sleep(1.5)
+
     time.sleep(3)
-except:
-    pass
-# Pendências de pedidos
-botao_e(nav,'/html/body/div[2]/table/tbody/tr/td[9]/div/input')
 
-iframes(nav)
-time.sleep(3)
+    # Excluindo os itens
+    excluindo_itens(nav)
 
-# Classe do Recurso 
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-classe_recursos = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(3)
-classe_recursos.send_keys(Keys.CONTROL + 'a')
-time.sleep(3)
-classe_recursos.send_keys(Keys.BACKSPACE)
-time.sleep(3)
-classe_recursos.send_keys('Produtos')
-time.sleep(3)
-classe_recursos.send_keys(Keys.ENTER)
-time.sleep(6)
-# Emissão Inicial 
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-emissao_inicial = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(2)
-emissao_inicial.send_keys(Keys.CONTROL + 'a')
-time.sleep(2)
-emissao_inicial.send_keys(Keys.BACKSPACE)
-time.sleep(2)
-emissao_inicial.send_keys('01/01/2021')
-time.sleep(2)
-emissao_inicial.send_keys(Keys.ENTER)
-time.sleep(3)
-# Emissão Final
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[4]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-emissao_final = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[4]/table/tbody/tr/td[1]/input')
-time.sleep(2)
-emissao_final.send_keys(Keys.CONTROL + 'a')
-time.sleep(2)
-emissao_final.send_keys('h')
-time.sleep(2)
-emissao_final.send_keys(Keys.ENTER)
-time.sleep(3)
+    time.sleep(3)
 
-# Executar busca de pedidos
-emissao_final.send_keys(Keys.CONTROL,Keys.SHIFT + 'e') # Possivel mudança
-time.sleep(2)
-try: 
-  while  nav.find_element(By.ID, 'progressMessageBox'):
-    print('Carregando 2 ...')
-except:
-    print('Carregou 2') 
+    saida_iframe(nav)
+
+    time.sleep(3)
+
+    try:
+        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="answers_0"]')))
+        time.sleep(1)
+        nav.find_element(By.XPATH, '//*[@id="answers_0"]').click()
+        time.sleep(3)
+    except:
+        pass
+    # Pendências de pedidos
+    botao_e(nav,'/html/body/div[2]/table/tbody/tr/td[9]/div/input')
+
+    iframes(nav)
+    time.sleep(3)
+
+    # Classe do Recurso 
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    classe_recursos = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')
+    time.sleep(3)
+    classe_recursos.send_keys(Keys.CONTROL + 'a')
+    time.sleep(3)
+    classe_recursos.send_keys(Keys.BACKSPACE)
+    time.sleep(3)
+    classe_recursos.send_keys('Produtos')
+    time.sleep(3)
+    classe_recursos.send_keys(Keys.ENTER)
+    time.sleep(6)
+    # Emissão Inicial 
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    emissao_inicial = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[2]/table/tbody/tr/td[1]/input')
+    time.sleep(2)
+    emissao_inicial.send_keys(Keys.CONTROL + 'a')
+    time.sleep(2)
+    emissao_inicial.send_keys(Keys.BACKSPACE)
+    time.sleep(2)
+    emissao_inicial.send_keys('01/01/2021')
+    time.sleep(2)
+    emissao_inicial.send_keys(Keys.ENTER)
+    time.sleep(3)
+    # Emissão Final
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[4]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    emissao_final = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[4]/table/tbody/tr/td[1]/input')
+    time.sleep(2)
+    emissao_final.send_keys(Keys.CONTROL + 'a')
+    time.sleep(2)
+    emissao_final.send_keys('h')
+    time.sleep(2)
+    emissao_final.send_keys(Keys.ENTER)
+    time.sleep(3)
+
+    # Executar busca de pedidos
+    emissao_final.send_keys(Keys.CONTROL,Keys.SHIFT + 'e') # Possivel mudança
+    time.sleep(2)
+    try: 
+        while  nav.find_element(By.ID, 'progressMessageBox'):
+            print('Carregando 2 ...')
+    except:
+        print('Carregou 2') 
+        time.sleep(1.5)
+
+    materiais_pecas(nav)
+
+    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[14]/td[11]/div/div').click()
+
+    time.sleep(2)
+
+    table = nav.find_element(By.XPATH,'//*[@id="grEspecificacao"]/tbody/tr[1]/td[1]/table')
+
+    table_html = table.get_attribute('outerHTML')
+
+    df = pd.read_html(str(table_html))
+
+    df1 = df.copy()
+
+    df1 = df1[0]
+
+    df1 = df1.rename(columns={0:'',1:'Recurso',3:'Quantidade',5:'Prev. Emissão Doc.',6:'Hora'})
+
+    df1.reset_index(drop=True)
+
+    df1 = df1[['Recurso','Quantidade','Prev. Emissão Doc.','Hora']]
+
+    df1 = df1.iloc[12:]
+
+    df1.replace(np.nan,'',inplace=True)
+
+    df1 = df1[df1['Recurso'] != ""]
+    df1 = df1[df1['Prev. Emissão Doc.'] == ""]
+
+    df1.reset_index(drop=True, inplace=True)
+
+    l = 4
+
+    # Percorrer as linhas do df1, ou seja, as que apresentam Prev. Emissão Doc. e Hora com input vazio 
+    for i in range(0,len(df1)):
+
+        # Input campo de Data
+        time.sleep(1)
+        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[4]/td[5]/div/div')))
+        time.sleep(1.5)
+        nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[4]/td[5]/div/div').click()  
+
+        time.sleep(1)
+        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='0']/td[5]/div/input")))
+        time.sleep(1.5)
+        nav.find_element(By.XPATH, "//*[@id='0']/td[5]/div/input").send_keys('3112')
+        time.sleep(1)
+        nav.find_element(By.XPATH, "//*[@id='0']/td[5]/div/input").send_keys(Keys.ENTER)
+        l = l+2
+            # if df1['Hora'][i] == '': 
+
+        time.sleep(1)
+        # Input campo de Hora
+        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="0"]/td[6]/div/input')))
+        time.sleep(1.5)
+        nav.find_element(By.XPATH, '//*[@id="0"]/td[6]/div/input').send_keys('h')
+        time.sleep(1)
+        nav.find_element(By.XPATH, '//*[@id="0"]/td[6]/div/input').send_keys(Keys.ENTER)
+        time.sleep(1)
+        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[6]/td[5]/div/div')))
+        time.sleep(1.5)
+        nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[6]/td[5]/div/div').click()
+
+    # Explodir
+    explodir(nav)
+
     time.sleep(1.5)
 
-materiais_pecas(nav)
-
-nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[14]/td[11]/div/div').click()
-
-time.sleep(2)
-
-table = nav.find_element(By.XPATH,'//*[@id="grEspecificacao"]/tbody/tr[1]/td[1]/table')
-
-table_html = table.get_attribute('outerHTML')
-
-df = pd.read_html(str(table_html))
-
-df1 = df.copy()
-
-df1 = df1[0]
-
-df1 = df1.rename(columns={0:'',1:'Recurso',3:'Quantidade',5:'Prev. Emissão Doc.',6:'Hora'})
-
-df1.reset_index(drop=True)
-
-df1 = df1[['Recurso','Quantidade','Prev. Emissão Doc.','Hora']]
-
-df1 = df1.iloc[12:]
-
-df1.replace(np.nan,'',inplace=True)
-
-df1 = df1[df1['Recurso'] != ""]
-df1 = df1[df1['Prev. Emissão Doc.'] == ""]
-
-df1.reset_index(drop=True, inplace=True)
-
-l = 4
-
-# Percorrer as linhas do df1, ou seja, as que apresentam Prev. Emissão Doc. e Hora com input vazio 
-for i in range(0,len(df1)):
-
-    # Input campo de Data
-    time.sleep(1)
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[4]/td[5]/div/div')))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[4]/td[5]/div/div').click()  
-
-    time.sleep(1)
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='0']/td[5]/div/input")))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, "//*[@id='0']/td[5]/div/input").send_keys('3112')
-    time.sleep(1)
-    nav.find_element(By.XPATH, "//*[@id='0']/td[5]/div/input").send_keys(Keys.ENTER)
-    l = l+2
-        # if df1['Hora'][i] == '': 
-
-    time.sleep(1)
-    # Input campo de Hora
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="0"]/td[6]/div/input')))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, '//*[@id="0"]/td[6]/div/input').send_keys('h')
-    time.sleep(1)
-    nav.find_element(By.XPATH, '//*[@id="0"]/td[6]/div/input').send_keys(Keys.ENTER)
-    time.sleep(1)
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[6]/td[5]/div/div')))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[6]/td[5]/div/div').click()
-
-# Explodir
-explodir(nav)
-
-time.sleep(1.5)
-
-nav.find_element(By.XPATH,'/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button').click()
-time.sleep(1.5)
-
-saida_iframe(nav)
-time.sleep(3)
-menu_innovaro(nav)
-time.sleep(2)
-
-listar_menu_click(nav,'Relatório de Logística de Compras da Simulação')
-
-time.sleep(6)
-iframes(nav)
-time.sleep(2)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(2)
-simulacao = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(2)
-simulacao.send_keys(Keys.BACKSPACE)
-time.sleep(2)
-simulacao.send_keys('Pendencia Diaria Carretas Compras') # Último Nível, Almox de Compras, Materiais e Produtos
-time.sleep(2)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(2)
-ult_niv = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(2)
-ult_niv.send_keys(Keys.CONTROL + 'a')
-time.sleep(2)
-ult_niv.send_keys(Keys.BACKSPACE)
-time.sleep(2)
-ult_niv.send_keys('Último Nível')
-time.sleep(2)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[5]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(2)
-almo_comp = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[5]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(2)
-almo_comp.send_keys(Keys.CONTROL + 'a')
-time.sleep(2)
-almo_comp.send_keys(Keys.BACKSPACE)
-time.sleep(2)
-almo_comp.send_keys('Almox de Compras')
-time.sleep(2)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-mat_prod = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(2)
-mat_prod.send_keys(Keys.CONTROL + 'a')
-time.sleep(2)
-mat_prod.send_keys(Keys.BACKSPACE)
-time.sleep(2)
-mat_prod.send_keys('Materiais e Produtos')
-time.sleep(3)
-mat_prod.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
-time.sleep(3)
-
-while len(nav.find_elements(By.XPATH, '//*[@id="lid-0"]')) < 1:
-    time.sleep(1)
-
-time.sleep(3)
-saida_iframe(nav)
-time.sleep(2)
-download_recursos_utilizados(nav)
-time.sleep(3)
-
-# Organizando a planilha Recursos utilizados
-
-update_planilha_recursos_utilizados()
-
-# ------------------------------------
-# Ajustando a planilha Análise Previsão de Consumo (CMM / NTP ) DEE
-
-tabela2 = tabela.copy()
-tabela2 = tabela2.iloc[:, 4:15]
-tabela2 = tabela2.rename(columns={4:'Recurso',5:'Unid.',6:'Média',7:'CMA', 8:'Simulado',9:'Qtd.Est.',10:'Ped.Pend.', 11:'Saldo',12:'Cust.Unit.', 13:'TRP',14:'DEE'})
-tabela2 = tabela2.reset_index()
-tabela2 = tabela2.drop(0)
-tabela2 = tabela2.drop('index',axis=1)
-
-# ------------- Estoque --------------
-
-saida_iframe(nav)
-
-time.sleep(3)
-
-menu_innovaro(nav)
-
-time.sleep(2)
-
-listar_menu_click(nav,'Estoque')
-
-listar_menu_click(nav,'Consultas')
-
-listar_menu_click(nav,'Saldos de Recursos - CEMAG')
-
-time.sleep(2)
-
-iframes(nav)
-time.sleep(1.5)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-data_base = nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(1)
-
-# while len(data_base) < 1:
-#     time.sleep(1)
-# time.sleep(1.5)
-
-data_base.send_keys('h')
-time.sleep(1.5)
-data_base.send_keys(Keys.ENTER)
-time.sleep(2)
-
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input').send_keys(Keys.CONTROL, Keys.SHIFT + 'x')
-time.sleep(2)
-
-saida_iframe(nav)
-time.sleep(2)
-try:    
-    while nav.find_element(By.XPATH, '//*[@id="statusMessageBox"]'):
-        print('Carregando...')
-except:
-    print('Carregou 1')
-
-try: 
-    while  nav.find_element(By.XPATH, '//*[@id="progressMessageBox"]'):
-        print('Carregando 2 ...')
-except:
-    print('Carregou 2') 
-    time.sleep(1)
-time.sleep(1.5)
-
-iframes(nav)
-time.sleep(1.5)
-
-# while len(nav.find_element(By.ID, '_lbl_dadosGeradosComSucessoSelecionaAOpcaoExportarParaSelecionarOFormatoDeExportacao')):
-#     time.sleep(1)
-# time.sleep(1.5)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body')))
-time.sleep(1.5)
-nav.find_element(By.XPATH, '/html/body').send_keys(Keys.CONTROL,Keys.SHIFT + 'x')
-
-time.sleep(2)
-saida_iframe(nav)
-time.sleep(2)
-
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.ID,'answers_0')))
-time.sleep(1.5)
-nav.find_element(By.ID,'answers_0').click()
-time.sleep(4)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/table/tbody/tr/td[9]/div/input')))
-time.sleep(1.5)
-nav.find_element(By.XPATH, '/html/body/div[2]/table/tbody/tr/td[9]/div/input').send_keys(Keys.CONTROL,Keys.SHIFT + 'e')
-time.sleep(2)
-try: 
-    while  nav.find_element(By.XPATH, '//*[@id="progressMessageBox"]'):
-        print('Carregando 2 ...')
-except:
-    print('Carregou 2') 
-    time.sleep(1)
-time.sleep(1.5)
-iframes(nav)
-time.sleep(1)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="_download_elt"]')))
-time.sleep(1.5)
-nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
-time.sleep(1)
-# ------------------------------------------------------------------
-# Organizando a planilha Saldo de Recursos - CEMAG
-
-update_saldo_recursos()
-
-# ----------------Compra------------------
-saida_iframe(nav)
-
-time.sleep(3)
-
-menu_innovaro(nav)
-
-time.sleep(2)
-
-listar_menu_click(nav,'Compra')
-
-listar_menu_click(nav,'Consultas')
-
-listar_menu_click(nav,'Análise de Pedidos Pendentes ou Baixados - CEMAG')
-
-time.sleep(15)
-# mudar essa parte
-iframes(nav)
-time.sleep(1)
-
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[29]/td[4]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-emissao = nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[29]/td[4]/table/tbody/tr/td[1]/input')
-time.sleep(1.5)
-emissao.send_keys(Keys.CONTROL + 'a')
-time.sleep(1.5)
-emissao.send_keys('h')
-time.sleep(1.5)
-emissao.send_keys(Keys.ENTER)
-time.sleep(1.5)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input').send_keys(Keys.CONTROL, Keys.SHIFT + 'x')
-time.sleep(1.5)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="_lbl_dadosGeradosComSucessoSelecionaAOpcaoExportarParaSelecionarOFormatoDeExportacao"]')))
-
-time.sleep(2)
-
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body')))
-time.sleep(1.5)
-nav.find_element(By.XPATH, '/html/body').send_keys(Keys.CONTROL,Keys.SHIFT + 'x')
-
-time.sleep(1.5)
-saida_iframe(nav)
-time.sleep(2)
-
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.ID,'answers_0')))
-time.sleep(1.5)
-nav.find_element(By.ID,'answers_0').click()
-time.sleep(2)
-iframes(nav)
-time.sleep(2)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(1.5)
-nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input').send_keys(Keys.CONTROL,Keys.SHIFT + 'e')
-time.sleep(1.5)
-
-iframes(nav)
-
-time.sleep(1.5)
-
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="_download_elt"]')))
-
-time.sleep(3)
-
-nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
-
-time.sleep(5)
-
-# ---------------------------------------------------------------------------
-# Organizando a planilha de Análise de Pedidos Pendentes ou Baixados - CEMAG 
-
-update_analise_pedidos_pendentes()
-
-# ----------------------------------------------------------------------------------------------------------------------------------------------------------
-# Innovaro -> Produção -> Plano Mestre -> Plano Mestre
-
-saida_iframe(nav)
-time.sleep(3)
-
-menu_innovaro(nav)
-
-time.sleep(2)
-
-listar_menu_click(nav,'Plano mestre e simulação')
-
-time.sleep(6)
-
-iframes(nav)
-
-input_localizar(nav,'Simulação Mat ind (Mov 3M)')
-
-try: 
-  while  nav.find_element(By.ID, 'progressMessageBox'):
-    print('Carregando 3 ...')
-except:
-    print('Carregou 3') 
+    nav.find_element(By.XPATH,'/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button').click()
     time.sleep(1.5)
 
-# Explodir
-explodir(nav)
-time.sleep(1.5)
-nav.find_element(By.XPATH,'//*[@id="confirm"]').click()
-time.sleep(1.5)
-saida_iframe(nav)
+    saida_iframe(nav)
+    time.sleep(3)
+    menu_innovaro(nav)
+    time.sleep(2)
 
-time.sleep(3)
-menu_innovaro(nav)
-time.sleep(2)
+    listar_menu_click(nav,'Relatório de Logística de Compras da Simulação')
 
-listar_menu_click(nav,'Relatório de Logística de Compras da Simulação')
+    time.sleep(6)
+    iframes(nav)
+    time.sleep(2)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(2)
+    simulacao = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')
+    time.sleep(2)
+    simulacao.send_keys(Keys.BACKSPACE)
+    time.sleep(2)
+    simulacao.send_keys('Pendencia Diaria Carretas Compras') # Último Nível, Almox de Compras, Materiais e Produtos
+    time.sleep(2)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(2)
+    ult_niv = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')
+    time.sleep(2)
+    ult_niv.send_keys(Keys.CONTROL + 'a')
+    time.sleep(2)
+    ult_niv.send_keys(Keys.BACKSPACE)
+    time.sleep(2)
+    ult_niv.send_keys('Último Nível')
+    time.sleep(2)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[5]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(2)
+    almo_comp = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[5]/td[2]/table/tbody/tr/td[1]/input')
+    time.sleep(2)
+    almo_comp.send_keys(Keys.CONTROL + 'a')
+    time.sleep(2)
+    almo_comp.send_keys(Keys.BACKSPACE)
+    time.sleep(2)
+    almo_comp.send_keys('Almox de Compras')
+    time.sleep(2)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    mat_prod = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')
+    time.sleep(2)
+    mat_prod.send_keys(Keys.CONTROL + 'a')
+    time.sleep(2)
+    mat_prod.send_keys(Keys.BACKSPACE)
+    time.sleep(2)
+    mat_prod.send_keys('Materiais e Produtos')
+    time.sleep(3)
+    mat_prod.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
+    time.sleep(3)
 
-time.sleep(6)
-iframes(nav)
-time.sleep(2)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(2)
-simulacao = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(3)
-simulacao.send_keys(Keys.BACKSPACE)
-time.sleep(3)
-simulacao.send_keys('Simulação Mat ind (Mov 3M)') # Último Nível, Almox de Compras, Materiais e Produtos
-time.sleep(3)
-simulacao.send_keys(Keys.TAB)
-time.sleep(3)
-WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
-time.sleep(2)
-ult_niv = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')
-time.sleep(2)
-ult_niv.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
-time.sleep(1)
+    while len(nav.find_elements(By.XPATH, '//*[@id="lid-0"]')) < 1:
+        time.sleep(1)
 
-while len(nav.find_elements(By.XPATH, '/html/body/table[2]/thead/tr[1]/th/table/tbody/tr[1]/td[1]/table/tbody/tr/td')) < 1: #len(nav.find_elements(By.XPATH, '//*[@id="lid-0"]')) < 1 or len(nav.find_elements(By.XPATH, '//*[@id="lid-14"]')) < 1
+    time.sleep(3)
+    saida_iframe(nav)
+    time.sleep(2)
+    download_recursos_utilizados(nav)
+    time.sleep(3)
+
+    # Organizando a planilha Recursos utilizados
+
+    update_planilha_recursos_utilizados()
+
+    # ------------------------------------
+    # Ajustando a planilha Análise Previsão de Consumo (CMM / NTP ) DEE
+
+    tabela2 = tabela.copy()
+    tabela2 = tabela2.iloc[:, 4:15]
+    tabela2 = tabela2.rename(columns={4:'Recurso',5:'Unid.',6:'Média',7:'CMA', 8:'Simulado',9:'Qtd.Est.',10:'Ped.Pend.', 11:'Saldo',12:'Cust.Unit.', 13:'TRP',14:'DEE'})
+    tabela2 = tabela2.reset_index()
+    tabela2 = tabela2.drop(0)
+    tabela2 = tabela2.drop('index',axis=1)
+
+    # ------------- Estoque --------------
+
+    saida_iframe(nav)
+
+    time.sleep(3)
+
+    menu_innovaro(nav)
+
+    time.sleep(2)
+
+    listar_menu_click(nav,'Estoque')
+
+    listar_menu_click(nav,'Consultas')
+
+    listar_menu_click(nav,'Saldos de Recursos - CEMAG')
+
+    time.sleep(2)
+
+    iframes(nav)
+    time.sleep(1.5)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    data_base = nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')
     time.sleep(1)
 
-time.sleep(3)
-saida_iframe(nav)
-time.sleep(2)
+    # while len(data_base) < 1:
+    #     time.sleep(1)
+    # time.sleep(1.5)
 
-download_recursos_utilizados(nav)
-time.sleep(3)
-# ---------------------------------------------------------------------------
-# Organizando a planilha de Dados Simulação - Planilha "Requisitados"
+    data_base.send_keys('h')
+    time.sleep(1.5)
+    data_base.send_keys(Keys.ENTER)
+    time.sleep(2)
 
-update_analise_pedidos_materiais_custo_indireto()
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input').send_keys(Keys.CONTROL, Keys.SHIFT + 'x')
+    time.sleep(2)
 
-time.sleep(2)
+    saida_iframe(nav)
+    time.sleep(2)
+    try:    
+        while nav.find_element(By.XPATH, '//*[@id="statusMessageBox"]'):
+            print('Carregando...')
+    except:
+        print('Carregou 1')
 
-# ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    try: 
+        while  nav.find_element(By.XPATH, '//*[@id="progressMessageBox"]'):
+            print('Carregando 2 ...')
+    except:
+        print('Carregou 2') 
+        time.sleep(1)
+    time.sleep(1.5)
+
+    iframes(nav)
+    time.sleep(1.5)
+
+    # while len(nav.find_element(By.ID, '_lbl_dadosGeradosComSucessoSelecionaAOpcaoExportarParaSelecionarOFormatoDeExportacao')):
+    #     time.sleep(1)
+    # time.sleep(1.5)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body').send_keys(Keys.CONTROL,Keys.SHIFT + 'x')
+
+    time.sleep(2)
+    saida_iframe(nav)
+    time.sleep(2)
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.ID,'answers_0')))
+    time.sleep(1.5)
+    nav.find_element(By.ID,'answers_0').click()
+    time.sleep(4)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/table/tbody/tr/td[9]/div/input')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/div[2]/table/tbody/tr/td[9]/div/input').send_keys(Keys.CONTROL,Keys.SHIFT + 'e')
+    time.sleep(2)
+    try: 
+        while  nav.find_element(By.XPATH, '//*[@id="progressMessageBox"]'):
+            print('Carregando 2 ...')
+    except:
+        print('Carregou 2') 
+        time.sleep(1)
+    time.sleep(1.5)
+    iframes(nav)
+    time.sleep(1)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="_download_elt"]')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
+    time.sleep(1)
+    # ------------------------------------------------------------------
+    # Organizando a planilha Saldo de Recursos - CEMAG
+
+    update_saldo_recursos()
+
+    # ----------------Compra------------------
+    saida_iframe(nav)
+
+    time.sleep(3)
+
+    menu_innovaro(nav)
+
+    time.sleep(2)
+
+    listar_menu_click(nav,'Compra')
+
+    listar_menu_click(nav,'Consultas')
+
+    listar_menu_click(nav,'Análise de Pedidos Pendentes ou Baixados - CEMAG')
+
+    time.sleep(15)
+    # mudar essa parte
+    iframes(nav)
+    time.sleep(1)
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[29]/td[4]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    emissao = nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[29]/td[4]/table/tbody/tr/td[1]/input')
+    time.sleep(1.5)
+    emissao.send_keys(Keys.CONTROL + 'a')
+    time.sleep(1.5)
+    emissao.send_keys('h')
+    time.sleep(1.5)
+    emissao.send_keys(Keys.ENTER)
+    time.sleep(1.5)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input').send_keys(Keys.CONTROL, Keys.SHIFT + 'x')
+    time.sleep(1.5)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="_lbl_dadosGeradosComSucessoSelecionaAOpcaoExportarParaSelecionarOFormatoDeExportacao"]')))
+
+    time.sleep(2)
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body').send_keys(Keys.CONTROL,Keys.SHIFT + 'x')
+
+    time.sleep(1.5)
+    saida_iframe(nav)
+    time.sleep(2)
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.ID,'answers_0')))
+    time.sleep(1.5)
+    nav.find_element(By.ID,'answers_0').click()
+    time.sleep(2)
+    iframes(nav)
+    time.sleep(2)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/div[2]/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input').send_keys(Keys.CONTROL,Keys.SHIFT + 'e')
+    time.sleep(1.5)
+
+    iframes(nav)
+
+    time.sleep(1.5)
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="_download_elt"]')))
+
+    time.sleep(3)
+
+    nav.find_element(By.XPATH, '//*[@id="_download_elt"]').click()
+
+    time.sleep(5)
+
+    # ---------------------------------------------------------------------------
+    # Organizando a planilha de Análise de Pedidos Pendentes ou Baixados - CEMAG 
+
+    update_analise_pedidos_pendentes()
+
+    # ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Innovaro -> Produção -> Plano Mestre -> Plano Mestre
+
+    saida_iframe(nav)
+    time.sleep(3)
+
+    menu_innovaro(nav)
+
+    time.sleep(2)
+
+    listar_menu_click(nav,'Plano mestre e simulação')
+
+    time.sleep(6)
+
+    iframes(nav)
+
+    input_localizar(nav,'Simulação Mat ind (Mov 3M)')
+
+    try: 
+        while  nav.find_element(By.ID, 'progressMessageBox'):
+            print('Carregando 3 ...')
+    except:
+        print('Carregou 3') 
+        time.sleep(1.5)
+
+    # Explodir
+    explodir(nav)
+    time.sleep(1.5)
+    nav.find_element(By.XPATH,'//*[@id="confirm"]').click()
+    time.sleep(1.5)
+    saida_iframe(nav)
+
+    time.sleep(3)
+    menu_innovaro(nav)
+    time.sleep(2)
+
+    listar_menu_click(nav,'Relatório de Logística de Compras da Simulação')
+
+    time.sleep(6)
+    iframes(nav)
+    time.sleep(2)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(2)
+    simulacao = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')
+    time.sleep(3)
+    simulacao.send_keys(Keys.BACKSPACE)
+    time.sleep(3)
+    simulacao.send_keys('Simulação Mat ind (Mov 3M)') # Último Nível, Almox de Compras, Materiais e Produtos
+    time.sleep(3)
+    simulacao.send_keys(Keys.TAB)
+    time.sleep(3)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')))
+    time.sleep(2)
+    ult_niv = nav.find_element(By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input')
+    time.sleep(2)
+    ult_niv.send_keys(Keys.CONTROL, Keys.SHIFT + 'e')
+    time.sleep(1)
+
+    while len(nav.find_elements(By.XPATH, '/html/body/table[2]/thead/tr[1]/th/table/tbody/tr[1]/td[1]/table/tbody/tr/td')) < 1: #len(nav.find_elements(By.XPATH, '//*[@id="lid-0"]')) < 1 or len(nav.find_elements(By.XPATH, '//*[@id="lid-14"]')) < 1
+        time.sleep(1)
+
+    time.sleep(3)
+    saida_iframe(nav)
+    time.sleep(2)
+
+    download_recursos_utilizados(nav)
+    time.sleep(3)
+    # ---------------------------------------------------------------------------
+    # Organizando a planilha de Dados Simulação - Planilha "Requisitados"
+
+    update_analise_pedidos_materiais_custo_indireto()
+
+    time.sleep(2)
+
+    # ----------------------------------------------------------------------------------------------------------------------------------------------------------
+except Exception as e:
+    nav.save_screenshot("erro_screenshot.png")
+    print(f"Erro capturado: {str(e)}")
+
+finally:
+    # Fechar o navegador
+    nav.quit()
