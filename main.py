@@ -362,9 +362,9 @@ def update_analise_pedidos_materiais_custo_indireto():
     
     # Organizando a planilha de Dados Simulação - Planilha "Requisitados"
 
-    ultimoArquivo, caminho = ultimo_arquivo()
+    nome_arquivo, diretorio = ultimo_arquivo()
 
-    tabela_recursos = pd.read_csv(r'C:/Users/TI/Downloads/' + ultimoArquivo, encoding='iso-8859-1', sep=';')
+    tabela_recursos = pd.read_csv(os.path.join(diretorio, nome_arquivo), encoding='iso-8859-1', sep=';')
 
     tabela_recursos = tabela_recursos.rename(columns={'="Recurso"':'Recurso','="Unid."':'Unid.','="Média"':'Média',
                                                     '="CMA"':'CMA', '="Simulado"':'Simulado','="Qtd.Est."':'Qtd.Est.','="Ped.Pend."':'Ped.Pend.',
