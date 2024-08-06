@@ -303,10 +303,11 @@ def update_saldo_recursos():
     #Limpar valores nulos e transformar em lista
     tabela_saldos_csv_lista = tabela_saldos_csv.fillna('').values.tolist()
 
-    sh1.values_clear("'Est. Produção'!N3:U")
+    intervalo = 'N3:U'  # Ajuste conforme necessário
+    sh1.values_clear(f"'Est. Produção'!{intervalo}")
 
-    #Atualizar valores da planilha
-    wks2.update('N3:U', tabela_saldos_csv_lista)
+    # Atualizar valores da planilha
+    wks2.update(f'{intervalo}', tabela_saldos_csv_lista)
 
 # Baixando a planilha analise de pedidos pendentes e colocando em Dados Pedidos
 def update_analise_pedidos_pendentes():
@@ -490,8 +491,40 @@ try:
 
     time.sleep(3)
 
-    # Excluindo os itens
-    excluindo_itens(nav)
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[8]/div')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[8]/div').click()
+    time.sleep(2)
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="table-view-label_grEspecificacao_CHAVE"]')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '//*[@id="table-view-label_grEspecificacao_CHAVE"]').click()
+    time.sleep(2)
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/div')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/div').click()
+    time.sleep(2)
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[1]/div')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[1]/div').click()
+    time.sleep(2)
+    
+    for i in range(4,17,2):
+        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, f'/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[{i}]/td[1]/input')))
+        time.sleep(1)
+        nav.find_element(By.XPATH, f'/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[{i}]/td[1]/input').click()
+        time.sleep(1)
+
+    # /html/body/div[8]/table/tbody/tr/td[2]/div/div[1]
+
+    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[1]/td[1]/table/tbody/tr/td[2]/table/tbody/tr/td[3]/div')))
+    time.sleep(1.5)
+    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[1]/td[1]/table/tbody/tr/td[2]/table/tbody/tr/td[3]/div').click()
+
+    # Excluindo os itens 
+    # excluindo_itens(nav)
 
     time.sleep(3)
 
