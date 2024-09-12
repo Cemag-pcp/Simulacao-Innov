@@ -11,6 +11,7 @@ from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
+from io import StringIO
 import glob
 
 wait = 20
@@ -603,7 +604,7 @@ try:
 
     table_html = table.get_attribute('outerHTML')
 
-    df = pd.read_html(str(table_html))
+    df = pd.read_html(StringIO(table_html))
 
     df1 = df.copy()
 
