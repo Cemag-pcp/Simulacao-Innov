@@ -12,7 +12,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
 from io import StringIO
-import glob
+from utils import *
 
 wait = 20
 
@@ -76,7 +76,13 @@ def listar_menu_click(nav,item_menu):
 
 # Acesso ao Innovaro e Login
 def acessar_innovaro_login():
-    nav = webdriver.Chrome()#chrome_options=options)
+
+    try:
+        nav = webdriver.Chrome()
+    except:
+        chrome_driver_path = verificar_chrome_driver()
+        nav = webdriver.Chrome(chrome_driver_path)
+
     time.sleep(1)
     nav.maximize_window()
     time.sleep(1)
@@ -426,9 +432,9 @@ try:
     scope = ['https://www.googleapis.com/auth/spreadsheets',
                 "https://www.googleapis.com/auth/drive"]
 
-    credentials = ServiceAccountCredentials.from_json_keyfile_name("service_account_cemag.json", scope)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(r"C:\Users\TI\teste\simulacaoAtualizada\Simulacao-Innov\service_account_cemag.json", scope)
     client = gspread.authorize(credentials)
-    filename = 'service_account_cemag.json'
+    filename = r'C:\Users\TI\teste\simulacaoAtualizada\Simulacao-Innov\service_account_cemag.json'
     sa = gspread.service_account(filename)
 
     # Conectando com google sheets e acessando Análise Previsão de Consumo (CMM / NTP ) DEE

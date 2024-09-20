@@ -1,0 +1,1 @@
+python C:\Users\TI\teste\simulacaoAtualizada\Simulacao-Innov\main.py 
