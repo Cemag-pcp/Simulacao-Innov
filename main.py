@@ -86,9 +86,9 @@ def acessar_innovaro_login():
     time.sleep(1)
     nav.maximize_window()
     time.sleep(1)
-    # nav.get('http://192.168.3.141/sistema') # Sistema de produção
-    # nav.get('http://devcemag.innovaro.com.br:81/sistema') # Base H - Testes
-    nav.get('https://cemag.innovaro.com.br/sistema')
+    nav.get('http://192.168.3.141/sistema') # Sistema de produção
+    # nav.get('https://hcemag.innovaro.com.br/sistema') # Base H - Testes
+    # nav.get('https://cemag.innovaro.com.br/sistema')
 
 
     # Usuário e Senha Cemag
@@ -733,7 +733,8 @@ try:
 
     # Organizando a planilha Recursos utilizados
 
-    update_planilha_recursos_utilizados()
+    # DESCOMENTAR AQUI
+    # update_planilha_recursos_utilizados() 
 
     # ------------------------------------
     # Ajustando a planilha Análise Previsão de Consumo (CMM / NTP ) DEE
