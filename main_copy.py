@@ -482,194 +482,194 @@ try:
 
     listar_menu_click(nav,'Plano mestre e simulação')
 
-    time.sleep(6)
+    # time.sleep(6)
 
-    # Acessando os icones e o input de localizar
-    iframes(nav)
-    time.sleep(1)
-    input_localizar(nav,'Pendencia Diaria Carretas Compras')
+    # # Acessando os icones e o input de localizar
+    # iframes(nav)
+    # time.sleep(1)
+    # input_localizar(nav,'Pendencia Diaria Carretas Compras')
 
-    try: 
-        while  nav.find_element(By.ID, 'progressMessageBox'):
-            print('Carregando 2 ...')
-    except:
-        print('Carregou 2') 
-        time.sleep(1.5)
+    # try: 
+    #     while  nav.find_element(By.ID, 'progressMessageBox'):
+    #         print('Carregando 2 ...')
+    # except:
+    #     print('Carregou 2') 
+    #     time.sleep(1.5)
 
-    time.sleep(3)
+    # time.sleep(3)
 
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[8]/div')))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[8]/div').click()
-    time.sleep(2)
+    # WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[8]/div')))
+    # time.sleep(1.5)
+    # nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[8]/div').click()
+    # time.sleep(2)
 
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="table-view-label_grEspecificacao_CHAVE"]')))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, '//*[@id="table-view-label_grEspecificacao_CHAVE"]').click()
-    time.sleep(2)
+    # WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="table-view-label_grEspecificacao_CHAVE"]')))
+    # time.sleep(1.5)
+    # nav.find_element(By.XPATH, '//*[@id="table-view-label_grEspecificacao_CHAVE"]').click()
+    # time.sleep(2)
 
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/div')))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/div').click()
-    time.sleep(2)
+    # WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/div')))
+    # time.sleep(1.5)
+    # nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/div').click()
+    # time.sleep(2)
 
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[1]/div')))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[1]/div').click()
-    time.sleep(2)
+    # WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[1]/div')))
+    # time.sleep(1.5)
+    # nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[1]/div').click()
+    # time.sleep(2)
     
-    for i in range(4,17,2):
-        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, f'/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[{i}]/td[1]/input')))
-        time.sleep(1)
-        nav.find_element(By.XPATH, f'/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[{i}]/td[1]/input').click()
-        time.sleep(1)
+    # for i in range(4,17,2):
+    #     WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, f'/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[{i}]/td[1]/input')))
+    #     time.sleep(1)
+    #     nav.find_element(By.XPATH, f'/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[{i}]/td[1]/input').click()
+    #     time.sleep(1)
 
-    # /html/body/div[8]/table/tbody/tr/td[2]/div/div[1]
+    # # /html/body/div[8]/table/tbody/tr/td[2]/div/div[1]
 
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[1]/td[1]/table/tbody/tr/td[2]/table/tbody/tr/td[3]/div')))
-    time.sleep(1.5)
-    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[1]/td[1]/table/tbody/tr/td[2]/table/tbody/tr/td[3]/div').click()
+    # WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[1]/td[1]/table/tbody/tr/td[2]/table/tbody/tr/td[3]/div')))
+    # time.sleep(1.5)
+    # nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/thead/tr[1]/td[1]/table/tbody/tr/td[2]/table/tbody/tr/td[3]/div').click()
 
-    # Excluindo os itens 
-    # excluindo_itens(nav)
+    # # Excluindo os itens 
+    # # excluindo_itens(nav)
 
-    time.sleep(3)
+    # time.sleep(3)
 
-    saida_iframe(nav)
+    # saida_iframe(nav)
 
-    time.sleep(3)
+    # time.sleep(3)
 
-    try:
-        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="answers_0"]')))
-        time.sleep(1)
-        nav.find_element(By.XPATH, '//*[@id="answers_0"]').click()
-        time.sleep(3)
-    except:
-        pass
-    # Pendências de pedidos
-    botao_e(nav,'/html/body/div[2]/table/tbody/tr/td[9]/div/input')
+    # try:
+    #     WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="answers_0"]')))
+    #     time.sleep(1)
+    #     nav.find_element(By.XPATH, '//*[@id="answers_0"]').click()
+    #     time.sleep(3)
+    # except:
+    #     pass
+    # # Pendências de pedidos
+    # botao_e(nav,'/html/body/div[2]/table/tbody/tr/td[9]/div/input')
 
-    iframes(nav)
-    time.sleep(3)
+    # iframes(nav)
+    # time.sleep(3)
 
-    # Classe do Recurso 
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
-    time.sleep(1.5)
-    classe_recursos = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')
-    time.sleep(3)
-    classe_recursos.send_keys(Keys.CONTROL + 'a')
-    time.sleep(3)
-    classe_recursos.send_keys(Keys.BACKSPACE)
-    time.sleep(3)
-    classe_recursos.send_keys('Produtos')
-    time.sleep(3)
-    classe_recursos.send_keys(Keys.ENTER)
-    time.sleep(6)
-    # Emissão Inicial 
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
-    time.sleep(1.5)
-    emissao_inicial = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[2]/table/tbody/tr/td[1]/input')
-    time.sleep(2)
-    emissao_inicial.send_keys(Keys.CONTROL + 'a')
-    time.sleep(2)
-    emissao_inicial.send_keys(Keys.BACKSPACE)
-    time.sleep(2)
-    emissao_inicial.send_keys('01/01/2021')
-    time.sleep(2)
-    emissao_inicial.send_keys(Keys.ENTER)
-    time.sleep(3)
-    # Emissão Final
-    WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[4]/table/tbody/tr/td[1]/input')))
-    time.sleep(1.5)
-    emissao_final = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[4]/table/tbody/tr/td[1]/input')
-    time.sleep(2)
-    emissao_final.send_keys(Keys.CONTROL + 'a')
-    time.sleep(2)
-    emissao_final.send_keys('h')
-    time.sleep(2)
-    emissao_final.send_keys(Keys.ENTER)
-    time.sleep(3)
+    # # Classe do Recurso 
+    # WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
+    # time.sleep(1.5)
+    # classe_recursos = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')
+    # time.sleep(3)
+    # classe_recursos.send_keys(Keys.CONTROL + 'a')
+    # time.sleep(3)
+    # classe_recursos.send_keys(Keys.BACKSPACE)
+    # time.sleep(3)
+    # classe_recursos.send_keys('Produtos')
+    # time.sleep(3)
+    # classe_recursos.send_keys(Keys.ENTER)
+    # time.sleep(6)
+    # # Emissão Inicial 
+    # WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/input')))
+    # time.sleep(1.5)
+    # emissao_inicial = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[2]/table/tbody/tr/td[1]/input')
+    # time.sleep(2)
+    # emissao_inicial.send_keys(Keys.CONTROL + 'a')
+    # time.sleep(2)
+    # emissao_inicial.send_keys(Keys.BACKSPACE)
+    # time.sleep(2)
+    # emissao_inicial.send_keys('01/01/2021')
+    # time.sleep(2)
+    # emissao_inicial.send_keys(Keys.ENTER)
+    # time.sleep(3)
+    # # Emissão Final
+    # WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[4]/table/tbody/tr/td[1]/input')))
+    # time.sleep(1.5)
+    # emissao_final = nav.find_element(By.XPATH, '//*[@id="grFiltroDePedidos"]/tbody/tr[1]/td[1]/table/tbody/tr/td/table/tbody/tr[17]/td[4]/table/tbody/tr/td[1]/input')
+    # time.sleep(2)
+    # emissao_final.send_keys(Keys.CONTROL + 'a')
+    # time.sleep(2)
+    # emissao_final.send_keys('h')
+    # time.sleep(2)
+    # emissao_final.send_keys(Keys.ENTER)
+    # time.sleep(3)
 
-    # Executar busca de pedidos
-    emissao_final.send_keys(Keys.CONTROL,Keys.SHIFT + 'e') # Possivel mudança
-    time.sleep(2)
-    try: 
-        while  nav.find_element(By.ID, 'progressMessageBox'):
-            print('Carregando 2 ...')
-    except:
-        print('Carregou 2') 
-        time.sleep(1.5)
+    # # Executar busca de pedidos
+    # emissao_final.send_keys(Keys.CONTROL,Keys.SHIFT + 'e') # Possivel mudança
+    # time.sleep(2)
+    # try: 
+    #     while  nav.find_element(By.ID, 'progressMessageBox'):
+    #         print('Carregando 2 ...')
+    # except:
+    #     print('Carregou 2') 
+    #     time.sleep(1.5)
 
-    materiais_pecas(nav)
+    # materiais_pecas(nav)
 
-    nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[14]/td[11]/div/div').click()
+    # nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[14]/td[11]/div/div').click()
 
-    time.sleep(2)
+    # time.sleep(2)
 
-    table = nav.find_element(By.XPATH,'//*[@id="grEspecificacao"]/tbody/tr[1]/td[1]/table')
+    # table = nav.find_element(By.XPATH,'//*[@id="grEspecificacao"]/tbody/tr[1]/td[1]/table')
 
-    table_html = table.get_attribute('outerHTML')
+    # table_html = table.get_attribute('outerHTML')
 
-    df = pd.read_html(StringIO(table_html))
+    # df = pd.read_html(StringIO(table_html))
 
-    df1 = df.copy()
+    # df1 = df.copy()
 
-    df1 = df1[0]
+    # df1 = df1[0]
 
-    df1 = df1.rename(columns={0:'',1:'Recurso',3:'Quantidade',5:'Prev. Emissão Doc.',6:'Hora'})
+    # df1 = df1.rename(columns={0:'',1:'Recurso',3:'Quantidade',5:'Prev. Emissão Doc.',6:'Hora'})
 
-    df1.reset_index(drop=True)
+    # df1.reset_index(drop=True)
 
-    df1 = df1[['Recurso','Quantidade','Prev. Emissão Doc.','Hora']]
+    # df1 = df1[['Recurso','Quantidade','Prev. Emissão Doc.','Hora']]
 
-    df1 = df1.iloc[12:]
+    # df1 = df1.iloc[12:]
 
-    df1.replace(np.nan,'',inplace=True)
+    # df1.replace(np.nan,'',inplace=True)
 
-    df1 = df1[df1['Recurso'] != ""]
-    df1 = df1[df1['Prev. Emissão Doc.'] == ""]
+    # df1 = df1[df1['Recurso'] != ""]
+    # df1 = df1[df1['Prev. Emissão Doc.'] == ""]
 
-    df1.reset_index(drop=True, inplace=True)
+    # df1.reset_index(drop=True, inplace=True)
 
-    l = 4
+    # l = 4
 
-    # Percorrer as linhas do df1, ou seja, as que apresentam Prev. Emissão Doc. e Hora com input vazio 
-    for i in range(0,len(df1)):
+    # # Percorrer as linhas do df1, ou seja, as que apresentam Prev. Emissão Doc. e Hora com input vazio 
+    # for i in range(0,len(df1)):
 
-        # Input campo de Data
-        time.sleep(1)
-        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[4]/td[5]/div/div')))
-        time.sleep(1.5)
-        nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[4]/td[5]/div/div').click()  
+    #     # Input campo de Data
+    #     time.sleep(1)
+    #     WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[4]/td[5]/div/div')))
+    #     time.sleep(1.5)
+    #     nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[4]/td[5]/div/div').click()  
 
-        time.sleep(1)
-        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='0']/td[5]/div/input")))
-        time.sleep(1.5)
-        nav.find_element(By.XPATH, "//*[@id='0']/td[5]/div/input").send_keys('31/12/2025')
-        time.sleep(1)
-        nav.find_element(By.XPATH, "//*[@id='0']/td[5]/div/input").send_keys(Keys.ENTER)
-        l = l+2
-            # if df1['Hora'][i] == '': 
+    #     time.sleep(1)
+    #     WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='0']/td[5]/div/input")))
+    #     time.sleep(1.5)
+    #     nav.find_element(By.XPATH, "//*[@id='0']/td[5]/div/input").send_keys('31/12/2025')
+    #     time.sleep(1)
+    #     nav.find_element(By.XPATH, "//*[@id='0']/td[5]/div/input").send_keys(Keys.ENTER)
+    #     l = l+2
+    #         # if df1['Hora'][i] == '': 
 
-        time.sleep(1)
-        # Input campo de Hora
-        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="0"]/td[6]/div/input')))
-        time.sleep(1.5)
-        nav.find_element(By.XPATH, '//*[@id="0"]/td[6]/div/input').send_keys('h')
-        time.sleep(1)
-        nav.find_element(By.XPATH, '//*[@id="0"]/td[6]/div/input').send_keys(Keys.ENTER)
-        time.sleep(1)
-        WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[6]/td[5]/div/div')))
-        time.sleep(1.5)
-        nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[6]/td[5]/div/div').click()
+    #     time.sleep(1)
+    #     # Input campo de Hora
+    #     WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="0"]/td[6]/div/input')))
+    #     time.sleep(1.5)
+    #     nav.find_element(By.XPATH, '//*[@id="0"]/td[6]/div/input').send_keys('h')
+    #     time.sleep(1)
+    #     nav.find_element(By.XPATH, '//*[@id="0"]/td[6]/div/input').send_keys(Keys.ENTER)
+    #     time.sleep(1)
+    #     WebDriverWait(nav,20).until(EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[6]/td[5]/div/div')))
+    #     time.sleep(1.5)
+    #     nav.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[6]/td[5]/div/div').click()
 
-    # Explodir
-    explodir(nav)
+    # # Explodir
+    # explodir(nav)
 
-    time.sleep(1.5)
+    # time.sleep(1.5)
 
-    nav.find_element(By.XPATH,'/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button').click()
-    time.sleep(1.5)
+    # nav.find_element(By.XPATH,'/html/body/div[9]/div[2]/table/tbody/tr[2]/td/div/button').click()
+    # time.sleep(1.5)
 
     # saida_iframe(nav)
     # time.sleep(3)
